@@ -8,16 +8,10 @@ class TablesController < ApplicationController
     end
   end
 
-  def index
-    render json: Table.all.map(&:table_name)
-  end
-
   def show
     require_table
-  end
-
-  def new
-    @table = Table.new
+    @columns = @table.columns
+    @records = @table.model.all
   end
 
   def create
@@ -27,10 +21,6 @@ class TablesController < ApplicationController
     else
       render :new
     end
-  end
-
-  def edit
-    require_table
   end
 
   def update
