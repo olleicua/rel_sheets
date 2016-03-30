@@ -52,28 +52,54 @@ class Table
     ActiveRecord::Base.connection.tables.include?(@table_name)
   end
 
+  # TODO: implement all options allowed by migration methods
+
   def create
     if persisted?
       errors.add(:name, "Table #{@table.table_name} is already taken")
+
+      false
     else
-      raise 'not yet implemented'
+      _table_name = @table_name
+      ActiveRecord::Migration.class_eval do
+        create_table _table_name
+      end
+
+      true
     end
   end
 
   def rename(new_name)
     if ActiveRecord::Base.connection.tables.include?(new_name)
       errors.add(:name, "Table #{new_name} is already taken")
+
+      false
     else
-      raise 'not yet implemented'
+      _table_name = @table_name
+      ActiveRecord::Migration.class_eval do
+        rename_table _table_name, new_name
+      end
+
+      true
     end
   end
 
   def add_column(options)
-    raise 'not yet implemented'
+    _table_name = @table_name
+    ActiveRecord::Migration.class_eval do
+      add_column _table_name, options[:name], options
+    end
+
+    true
   end
 
   def drop
-    raise 'not yet implemented'
+    _table_name = @table_name
+    ActiveRecord::Migration.class_eval do
+      drop_table _table_name
+    end
+
+    true
   end
 
   private

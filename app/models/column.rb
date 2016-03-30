@@ -30,10 +30,20 @@ class Column
   end
 
   def alter(options)
-    raise 'not yet implemented'
+    _table_name = @table.table_name
+    ActiveRecord::Migration.class_eval do
+      change_column _table_name, name, options
+    end
+
+    true
   end
 
   def drop
-    raise 'not yet implemented'
+    _table_name = @table.table_name
+    ActiveRecord::Migration.class_eval do
+      remove_column _table_name, name
+    end
+
+    true
   end
 end
